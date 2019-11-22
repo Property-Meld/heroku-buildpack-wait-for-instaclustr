@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -ueo pipefail
+
+source /dev/stdin <<< "$(curl -s --retry 3 https://lang-common.s3.amazonaws.com/buildpack-stdlib/v4/stdlib.sh)"
+
+HEROKU_CLI_URL="https://cli-assets.heroku.com/heroku-linux-x64.tar.xz"
+
+env_dir=$1
+if [ -d "$env_dir" ]; then
+  export "HEROKU_API_KEY=$(cat $env_dir/HEROKU_API_KEY)"
+  export "HEROKU_APP_NAME=$(cat $env_dir/HEROKU_APP_NAME)"
+fi
+
+puts_step "Fetching Heroku CLI"
+
+if [[ -z "$(which curl)" ]]; then
+  wget -qO- $HEROKU_CLI_URL | tar xJ --strip-components 1
+else
+  curl -s --retry 3 $HEROKU_CLI_URL | tar xJ --strip-components 1
+fi
+
+puts_step "Waiting for Instaclustr"
+
+until heroku run printenv --app $HEROKU_APP_NAME | grep -q "IC_CONTACT_POINTS";
+do
+  sleep 10;
+done
+
+puts_step "Instaclustr addon is now available"
+
