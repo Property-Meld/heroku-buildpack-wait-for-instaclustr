@@ -8,7 +8,7 @@ source /dev/stdin <<< "$(curl -s --retry 3 https://lang-common.s3.amazonaws.com/
 
 HEROKU_CLI_URL="https://cli-assets.heroku.com/heroku-linux-x64.tar.xz"
 
-env_dir=$1
+env_dir=$3
 if [ -d "$env_dir" ]; then
   export "HEROKU_API_KEY=$(cat $env_dir/HEROKU_API_KEY)"
   export "HEROKU_APP_NAME=$(cat $env_dir/HEROKU_APP_NAME)"
