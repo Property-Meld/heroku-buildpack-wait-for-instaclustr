@@ -24,7 +24,7 @@ fi
 
 puts_step "Waiting for Instaclustr"
 
-until heroku run printenv --app $HEROKU_APP_NAME | grep -q "IC_CONTACT_POINTS";
+until bin/heroku run printenv --app $HEROKU_APP_NAME | grep -q "IC_CONTACT_POINTS";
 do
   sleep 10;
 done
