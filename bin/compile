@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# bin/compile <build-dir> <cache-dir>
+# bin/compile <build-dir> <cache-dir> <env-dir>
 
 # fail fast
 set -ueo pipefail
@@ -22,11 +22,7 @@ fi
 
 puts_step "Fetching Heroku CLI"
 
-if [[ -z "$(which curl)" ]]; then
-  wget -qO- $HEROKU_CLI_URL | tar xJ --strip-components 1
-else
-  curl -s --retry 3 $HEROKU_CLI_URL | tar xJ --strip-components 1
-fi
+curl -s --retry 3 $HEROKU_CLI_URL | tar xJ --strip-components 1
 
 puts_step "Waiting for Instaclustr"
 
